@@ -21,7 +21,7 @@ module Obscenity
       def profane?(text)
         return(false) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          return(true) if text =~ /\b#{foul}\b/i && !whitelist.include?(foul)
+          return(true) if text =~ create_regex(text) && !whitelist.include?(foul)
         end
         false
       end
@@ -29,7 +29,7 @@ module Obscenity
       def sanitize(text)
         return(text) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          text.gsub!(/\b#{foul}\b/i, replace(foul)) unless whitelist.include?(foul)
+          text.gsub!(create_regex(text), replace(foul)) unless whitelist.include?(foul)
         end
         @scoped_replacement = nil
         text
@@ -67,6 +67,10 @@ module Obscenity
         when String, Pathname then YAML.load_file( list.to_s )
         else []
         end
+      end
+          
+      def create_regex(text)
+        text[0] == '"' ? /#{foul}/i : /\b#{foul}\b/i
       end
 
     end
