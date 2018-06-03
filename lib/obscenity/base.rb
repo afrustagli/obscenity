@@ -44,7 +44,7 @@ module Obscenity
         words = []
         return(words) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          words << foul if text =~ /\b#{foul}\b/i && !whitelist.include?(foul)
+          words << foul if text =~ create_regex(text) && !whitelist.include?(foul)
         end
         words.uniq
       end
@@ -70,7 +70,8 @@ module Obscenity
       end
           
       def create_regex(text)
-        text[0] == '"' ? /#{foul}/i : /\b#{foul}\b/i
+ 	      match = /\/(.+?)\//.match(text)
+	      match ? /#{match[1]}/i : /\b#{Regexp.quote(text)}\b/i
       end
 
     end
