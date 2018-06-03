@@ -21,7 +21,7 @@ module Obscenity
       def profane?(text)
         return(false) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          return(true) if text =~ create_regex(text) && !whitelist.include?(foul)
+          return(true) if text =~ create_regex(foul) && !whitelist.include?(foul)
         end
         false
       end
@@ -29,7 +29,7 @@ module Obscenity
       def sanitize(text)
         return(text) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          text.gsub!(create_regex(text), replace(foul)) unless whitelist.include?(foul)
+          text.gsub!(create_regex(foul), replace(foul)) unless whitelist.include?(foul)
         end
         @scoped_replacement = nil
         text
@@ -44,7 +44,7 @@ module Obscenity
         words = []
         return(words) unless text.to_s.size >= 3
         blacklist.each do |foul|
-          words << foul if text =~ create_regex(text) && !whitelist.include?(foul)
+          words << foul if text =~ create_regex(foul) && !whitelist.include?(foul)
         end
         words.uniq
       end
